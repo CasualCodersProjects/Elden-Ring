@@ -7,27 +7,27 @@ GPIO.setwarnings(False)
 
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C')
-    GPIO.output(8, GPIO.cleanup())
+    GPIO.cleanup()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
 
-used_pins = [3,5,7,8,10,11,12]
+used_pins = [7,8,10,11,12,13,15]
 
 def readKeypad(printVal, inputPin, outputPin):
     print(f'powering pin {outputPin}')
     print(f'reading pin {inputPin}')
-    set_all_pins_input()
+    # set_all_pins_input()
     # set output pin
-    GPIO.setup(inputPin, GPIO.IN)
+    GPIO.setup(inputPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     # set other input pin
     GPIO.setup(outputPin, GPIO.OUT, initial=GPIO.HIGH)
     # if input is low its pressed
 
-    print_all_pins()    
+    # print_all_pins()    
 
-    # if not GPIO.input(inputPin):
-    #     print(printVal)
+    if not GPIO.input(inputPin):
+        print(printVal)
 
     #cleanup
     setup()
@@ -36,10 +36,11 @@ def readKeypad(printVal, inputPin, outputPin):
 def setup():
     for pin in used_pins:
         GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+        
 
 def set_all_pins_input():
     for i in range(0,6):
-        GPIO.setup(used_pins[i], GPIO.IN)
+        GPIO.setup(used_pins[i], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def print_all_pins():
     for i in range(0,6):
