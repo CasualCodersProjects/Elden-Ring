@@ -49,7 +49,7 @@ if len(sys.argv) > 1:
     try: 
         user_volume = float(sys.argv[1])
     except ValueError:
-        print "Volume argument invalid. Please use a float (0.0 - 1.0)"
+        print ("Volume argument invalid. Please use a float (0.0 - 1.0)")
         pg.mixer.music.fadeout(1000)
         pg.mixer.music.stop()
         raise SystemExit
