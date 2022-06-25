@@ -3,6 +3,8 @@ from time import sleep
 import signal
 import sys
 
+GPIO.setwarnings(False)
+
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C')
     GPIO.output(8, GPIO.cleanup())
@@ -37,11 +39,11 @@ def setup():
 
 def set_all_pins_input():
     for i in range(0,6):
-        print(GPIO.setup(used_pins[i]))
+        GPIO.setup(used_pins[i], GPIO.IN)
 
 def print_all_pins():
     for i in range(0,6):
-        print(GPIO.input(used_pins[i]))
+        print(f'Pin {used_pins[i]} is a {GPIO.input(used_pins[i])}')
     sleep(4)
 
 
@@ -53,14 +55,14 @@ if __name__ == "__main__":
 
     while True:
         readKeypad("#", used_pins[3], used_pins[6])
-        readKeypad("6", used_pins[3], used_pins[1])
-        readKeypad("9", used_pins[3], used_pins[0])
-        readKeypad("0", used_pins[4], used_pins[6])
-        readKeypad("*", used_pins[5], used_pins[6])
-        readKeypad("7", used_pins[5], used_pins[0])
-        readKeypad("4", used_pins[5], used_pins[1])
-        readKeypad("1", used_pins[5], used_pins[2])
-        readKeypad("2", used_pins[4], used_pins[2])
-        readKeypad("3", used_pins[2], used_pins[3])
-        readKeypad("5", used_pins[1], used_pins[4])
-        readKeypad("8", used_pins[0], used_pins[4])
+        # readKeypad("6", used_pins[3], used_pins[1])
+        # readKeypad("9", used_pins[3], used_pins[0])
+        # readKeypad("0", used_pins[4], used_pins[6])
+        # readKeypad("*", used_pins[5], used_pins[6])
+        # readKeypad("7", used_pins[5], used_pins[0])
+        # readKeypad("4", used_pins[5], used_pins[1])
+        # readKeypad("1", used_pins[5], used_pins[2])
+        # readKeypad("2", used_pins[4], used_pins[2])
+        # readKeypad("3", used_pins[2], used_pins[3])
+        # readKeypad("5", used_pins[1], used_pins[4])
+        # readKeypad("8", used_pins[0], used_pins[4])
