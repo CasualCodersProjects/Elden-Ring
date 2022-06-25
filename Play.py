@@ -61,7 +61,7 @@ if len(sys.argv) > 1:
         if file.endswith(".mp3"):
             mp3s.append(file)
 
-    print mp3s
+    print (mp3s)
 
     for x in mp3s: 
         try:
