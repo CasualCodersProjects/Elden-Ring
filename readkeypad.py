@@ -35,7 +35,7 @@ def readKeypad(printVal, inputPin, outputPin):
 # everything starts low
 def setup():
     for pin in used_pins:
-        GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
         
 
 def set_all_pins_input():
