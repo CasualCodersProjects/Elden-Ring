@@ -91,6 +91,8 @@ if __name__ == '__main__':
                 for process in alive_processes:
                     process.kill()
                 if not at_least_one_intro_spawned:
+                    while not queue.empty():
+                        queue.get()
                     intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
                     intro_process.start()
                     at_least_one_intro_spawned = True 
@@ -103,6 +105,8 @@ if __name__ == '__main__':
                 for process in alive_processes:
                     process.kill()
                 if not at_least_one_intro_spawned:
+                    while not queue.empty():
+                        queue.get()
                     intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
                     intro_process.start()
                     at_least_one_intro_spawned = True 
