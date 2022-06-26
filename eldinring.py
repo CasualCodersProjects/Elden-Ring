@@ -24,7 +24,9 @@ def play_sound_with_queue(mp3_file,queue):
     Play.init_sound()
 
     # wait for queue to play
+    print('sound init, waiting to play')
     obj = queue.get()
+    print('recieved item! now will play!')
 
     if os.path.exists(mp3_file):
         try:
@@ -77,6 +79,7 @@ if __name__ == '__main__':
         queue.put("go")
         # p = Process(target=play_sound, args=('/mnt/usb/welcome.mp3',))
         # p.start()
+        p = None
 
         # start looking at keypad
         while True:
@@ -91,8 +94,4 @@ if __name__ == '__main__':
             if readkeypad.check_phone_picked_up():
                 p.kill()
                 break
-
-
-
-
 
