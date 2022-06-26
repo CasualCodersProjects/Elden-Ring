@@ -26,8 +26,9 @@ if __name__ == '__main__':
         # Wait until handset is unplugged
         while(not readkeypad.check_phone_picked_up()):
             pass
+        print('Phone was picked Up!')
 
-        p = Process(target=play_sound, args=("~/../../mnt/usb/welcome.mp3"))
+        p = Process(target=play_sound, args=('~/../../mnt/usb/welcome.mp3',))
         p.start()
 
         # start looking at keypad
