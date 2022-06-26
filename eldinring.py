@@ -68,7 +68,7 @@ if __name__ == '__main__':
     while True:
         queue = multiprocessing.Queue()
         intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
-
+        intro_process.start()
         print('Program start! Welcome to the phone booth!')
 
         # Wait until handset is unplugged
@@ -79,12 +79,14 @@ if __name__ == '__main__':
         queue.put("go")
         # p = Process(target=play_sound, args=('/mnt/usb/welcome.mp3',))
         # p.start()
+        something_else_pressed = False
         p = None
 
         # start looking at keypad
         while True:
             pressed_button = readkeypad.check_keypad_pressed()
             if pressed_button is not None:
+                something_else_pressed = True
                 print(f'{pressed_button} was pressed!')
                 intro_process.kill()
                 sleep(0.25)
@@ -92,6 +94,7 @@ if __name__ == '__main__':
                 p.start()
                 sleep(1)
             if readkeypad.check_phone_picked_up():
-                p.kill()
+                if something_else_pressed:
+                    p.kill()
                 break
 
