@@ -102,5 +102,9 @@ if __name__ == '__main__':
             if readkeypad.check_phone_picked_up():
                 for process in alive_processes:
                     process.kill()
+                if not at_least_one_intro_spawned:
+                    intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
+                    intro_process.start()
+                    at_least_one_intro_spawned = True 
                 break
 
