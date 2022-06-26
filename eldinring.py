@@ -94,7 +94,7 @@ if __name__ == '__main__':
                 alive_processes = []
                 p = Process(target=play_sound, args=('/mnt/usb/' + pressed_button+'.mp3',))
                 p.start()
-                alive_processes.append[p]
+                alive_processes.append(p)
                 sleep(1)
             if readkeypad.check_phone_picked_up():
                 for process in alive_processes:
