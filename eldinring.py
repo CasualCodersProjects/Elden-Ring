@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 print(f'{pressed_button} was pressed!')
                 p.kill()
                 sleep(0.25)
-                p = Process(target=play_sound, args=('~/../../mnt/usb/' + pressed_button+'.mp3'))
+                p = Process(target=play_sound, args=('~/../../mnt/usb/' + pressed_button+'.mp3',))
                 p.start()
                 sleep(1)
             if readkeypad.check_phone_picked_up():
