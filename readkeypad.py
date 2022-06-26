@@ -61,8 +61,8 @@ def check_keypad_pressed():
     return result
 
 def phone_setup():
-    for pin in keypad_pins:
-        GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
+    for pin in phone_pins:
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # returns true if phone is picked up
 def check_phone_picked_up():
