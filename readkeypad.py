@@ -3,67 +3,67 @@ from time import sleep
 import signal
 import sys
 
-GPIO.setwarnings(False)
 
 def signal_handler(sig, frame):
-    print('You pressed Ctrl+C')
+    print('You pressed Ctrl+C, cleaning up gpio...')
     GPIO.cleanup()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
 
-used_pins = [7,8,10,11,12,13,15]
+phone_pins = [5,6,12,13]
+keypad_pins = [4,17,27,22,23,24,25]
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
 
 def readKeypad(printVal, inputPin, outputPin):
-    # print(f'powering pin {outputPin}')
-    # print(f'reading pin {inputPin}')
-    # set_all_pins_input()
+    #cleanup
+    gpio_setup()
+
     # set output pin
     GPIO.setup(inputPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     # set other input pin
     GPIO.setup(outputPin, GPIO.OUT, initial=GPIO.LOW)
     # if input is low its pressed
-
-    # print_all_pins()    
-
     if not GPIO.input(inputPin):
-        print(printVal)
+        return(printVal)
+    else:
+        return(None)
 
-    #cleanup
-    setup()
-
-# everything starts low
-def setup():
-    for pin in used_pins:
+def gpio_setup():
+    for pin in keypad_pins:
         GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
-        
 
-def set_all_pins_input():
-    for i in range(0,6):
-        GPIO.setup(used_pins[i], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+def update_result(result_so_far, param):
+    if param is None:
+        return result_so_far
+    else:
+        return param
 
-def print_all_pins():
-    for i in range(0,6):
-        print(f'Pin {used_pins[i]} is a {GPIO.input(used_pins[i])}')
-    sleep(4)
+# passes None if nothing is pressed, otherwise a string containing what was pressed
+# (if more than 1 is pressed it only 1 is returned)
+def check_keypad_pressed():
+    result = None
+    result = update_result(result,readKeypad("#", keypad_pins[3], keypad_pins[6]))
+    result = update_result(result,readKeypad("6", keypad_pins[3], keypad_pins[1]))
+    result = update_result(result,readKeypad("9", keypad_pins[3], keypad_pins[0]))
+    result = update_result(result,readKeypad("0", keypad_pins[4], keypad_pins[6]))
+    result = update_result(result,readKeypad("star", keypad_pins[5], keypad_pins[6]))
+    result = update_result(result,readKeypad("7", keypad_pins[5], keypad_pins[0]))
+    result = update_result(result,readKeypad("4", keypad_pins[5], keypad_pins[1]))
+    result = update_result(result,readKeypad("1", keypad_pins[5], keypad_pins[2]))
+    result = update_result(result,readKeypad("2", keypad_pins[4], keypad_pins[2]))
+    result = update_result(result,readKeypad("3", keypad_pins[2], keypad_pins[3]))
+    result = update_result(result,readKeypad("5", keypad_pins[1], keypad_pins[4]))
+    result = update_result(result,readKeypad("8", keypad_pins[0], keypad_pins[4]))
 
+    return result
 
-if __name__ == "__main__":
-    GPIO.setmode(GPIO.BOARD)
-    # setup()
+def phone_setup():
+    for pin in keypad_pins:
+        GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
 
-    print("starting keypad detection...")
-
-    while True:
-        readKeypad("#", used_pins[3], used_pins[6])
-        readKeypad("6", used_pins[3], used_pins[1])
-        readKeypad("9", used_pins[3], used_pins[0])
-        readKeypad("0", used_pins[4], used_pins[6])
-        readKeypad("*", used_pins[5], used_pins[6])
-        readKeypad("7", used_pins[5], used_pins[0])
-        readKeypad("4", used_pins[5], used_pins[1])
-        readKeypad("1", used_pins[5], used_pins[2])
-        readKeypad("2", used_pins[4], used_pins[2])
-        readKeypad("3", used_pins[2], used_pins[3])
-        readKeypad("5", used_pins[1], used_pins[4])
-        readKeypad("8", used_pins[0], used_pins[4])
+# returns true if phone is picked up
+def check_phone_picked_up():
+    return GPIO.input(phone_pins[0] or phone_pins[1] or phone_pins[2] or phone_pins[3])
