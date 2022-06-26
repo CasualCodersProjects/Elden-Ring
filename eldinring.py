@@ -67,9 +67,9 @@ if __name__ == '__main__':
     readkeypad.gpio_setup()
     queue = multiprocessing.Queue()
     intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
+    intro_process.start()
  
     while True:
-        intro_process.start()
         print('Program start! Welcome to the phone booth!')
 
         # Wait until handset is unplugged
@@ -81,6 +81,7 @@ if __name__ == '__main__':
         # p = Process(target=play_sound, args=('/mnt/usb/welcome.mp3',))
         # p.start()
         alive_processes = [intro_process]
+        at_least_one_intro_spawned = False
 
         # start looking at keypad
         while True:
@@ -89,8 +90,10 @@ if __name__ == '__main__':
                 print(f'{pressed_button} was pressed!')
                 for process in alive_processes:
                     process.kill()
-                intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
-                intro_process.start() 
+                if not at_least_one_intro_spawned:
+                    intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
+                    intro_process.start()
+                    at_least_one_intro_spawned = True 
                 alive_processes = []
                 p = Process(target=play_sound, args=('/mnt/usb/' + pressed_button+'.mp3',))
                 p.start()
