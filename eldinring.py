@@ -65,10 +65,10 @@ if __name__ == '__main__':
       
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
+    queue = multiprocessing.Queue()
     intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
  
     while True:
-        queue = multiprocessing.Queue()
         intro_process.start()
         print('Program start! Welcome to the phone booth!')
 
