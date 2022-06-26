@@ -44,7 +44,7 @@ def init_sound():
     channels = 2    # 1 is mono, 2 is stereo
     buffer = 2048   # number of samples (experiment to get right sound)
     pg.mixer.init(freq, bitsize, channels, buffer)
-    pg.mixer.music.set_volume(1.0)
+    pg.mixer.music.set_volume(0.25)
     
 if __name__ == "__main__":
     init_sound()
