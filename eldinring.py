@@ -2,15 +2,21 @@ import Play
 from time import sleep
 from multiprocessing import Process
 import readkeypad
+import os
 
 def play_sound(mp3_file):
-    Play.init_sound()
-    try:
-        Play.play_music(mp3_file)
-        sleep(.25)
-    except Exception as e:
-        print("error playing song")
-        print(e)
+
+    if os.path.exists(mp3_file):
+
+        Play.init_sound()
+        try:
+            Play.play_music(mp3_file)
+            sleep(.25)
+        except Exception as e:
+            print("error playing song")
+            print(e)
+    else:
+        print(f'no mp3 found for {mp3_file}')
 
 if __name__ == '__main__':
 
@@ -27,7 +33,7 @@ if __name__ == '__main__':
             pass
         print('Phone was picked Up!')
 
-        p = Process(target=play_sound, args=('~/../../mnt/usb/welcome.mp3',))
+        p = Process(target=play_sound, args=('/mnt/usb/welcome.mp3',))
         p.start()
 
         # start looking at keypad
@@ -37,7 +43,7 @@ if __name__ == '__main__':
                 print(f'{pressed_button} was pressed!')
                 p.kill()
                 sleep(0.25)
-                p = Process(target=play_sound, args=('~/../../mnt/usb/' + pressed_button+'.mp3',))
+                p = Process(target=play_sound, args=('/mnt/usb/' + pressed_button+'.mp3',))
                 p.start()
                 sleep(1)
             if readkeypad.check_phone_picked_up():

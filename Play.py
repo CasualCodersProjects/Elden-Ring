@@ -45,8 +45,7 @@ def init_sound():
     buffer = 2048   # number of samples (experiment to get right sound)
     pg.mixer.init(freq, bitsize, channels, buffer)
     pg.mixer.music.set_volume(1.0)
-    mp3s = ['#.mp3','0.mp3','1.mp3','2.mp3','3.mp3','4.mp3', '5.mp3','6.mp3','7.mp3','8.mp3','9.mp3','star.mp3','welcome.mp3']
-
+    
 if __name__ == "__main__":
     init_sound()
 
