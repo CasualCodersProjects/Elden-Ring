@@ -37,41 +37,47 @@ def play_music(music_file):
         clock.tick(30)
 
 
-freq = 44100    # audio CD quality
-bitsize = -16   # unsigned 16 bit
-channels = 2    # 1 is mono, 2 is stereo
-buffer = 2048   # number of samples (experiment to get right sound)
-pg.mixer.init(freq, bitsize, channels, buffer)
+def init_sound():
 
+    freq = 44100    # audio CD quality
+    bitsize = -16   # unsigned 16 bit
+    channels = 2    # 1 is mono, 2 is stereo
+    buffer = 2048   # number of samples (experiment to get right sound)
+    pg.mixer.init(freq, bitsize, channels, buffer)
+    pg.mixer.music.set_volume(1.0)
+    mp3s = ['#.mp3','0.mp3','1.mp3','2.mp3','3.mp3','4.mp3', '5.mp3','6.mp3','7.mp3','8.mp3','9.mp3','star.mp3','welcome.mp3']
 
-if len(sys.argv) > 1:
+if __name__ == "__main__":
+    init_sound()
 
-    try: 
-        user_volume = float(sys.argv[1])
-    except ValueError:
-        print ("Volume argument invalid. Please use a float (0.0 - 1.0)")
-        pg.mixer.music.fadeout(1000)
-        pg.mixer.music.stop()
-        raise SystemExit
+    if len(sys.argv) > 1:
 
-    print("Playing at volume: " + str(user_volume)+ "\n")
-    pg.mixer.music.set_volume(user_volume)
-    mp3s = []
-    for file in os.listdir("."):
-        if file.endswith(".mp3"):
-            mp3s.append(file)
-
-    print (mp3s)
-
-    for x in mp3s: 
-        try:
-            play_music(x)
-            time.sleep(.25)
-        except KeyboardInterrupt:
-            # if user hits Ctrl/C then exit
-            # (works only in console mode)
+        try: 
+            user_volume = float(sys.argv[1])
+        except ValueError:
+            print ("Volume argument invalid. Please use a float (0.0 - 1.0)")
             pg.mixer.music.fadeout(1000)
             pg.mixer.music.stop()
             raise SystemExit
-else:
-    print("Please specify volume as a float! (0.0 - 1.0)")
+
+        print("Playing at volume: " + str(user_volume)+ "\n")
+        pg.mixer.music.set_volume(user_volume)
+        mp3s = []
+        for file in os.listdir("."):
+            if file.endswith(".mp3"):
+                mp3s.append(file)
+
+        print (mp3s)
+
+        for x in mp3s: 
+            try:
+                play_music(x)
+                time.sleep(.25)
+            except KeyboardInterrupt:
+                # if user hits Ctrl/C then exit
+                # (works only in console mode)
+                pg.mixer.music.fadeout(1000)
+                pg.mixer.music.stop()
+                raise SystemExit
+    else:
+        print("Please specify volume as a float! (0.0 - 1.0)")
