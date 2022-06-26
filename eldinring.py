@@ -87,7 +87,7 @@ if __name__ == '__main__':
             pressed_button = readkeypad.check_keypad_pressed()
             if pressed_button is not None:
                 print(f'{pressed_button} was pressed!')
-                for process in alive_processes():
+                for process in alive_processes:
                     process.kill()
                 intro_process = Process(target=play_sound_with_queue, args=(f'/mnt/usb/welcome.mp3',queue))
                 intro_process.start() 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                 alive_processes.append[p]
                 sleep(1)
             if readkeypad.check_phone_picked_up():
-                for process in alive_processes():
+                for process in alive_processes:
                     process.kill()
                 break
 
