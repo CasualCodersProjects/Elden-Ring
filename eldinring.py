@@ -5,10 +5,8 @@ import readkeypad
 import os
 
 def play_sound(mp3_file):
-
+    Play.init_sound()
     if os.path.exists(mp3_file):
-
-        Play.init_sound()
         try:
             Play.play_music(mp3_file)
             sleep(.25)
@@ -21,6 +19,9 @@ def play_sound(mp3_file):
 if __name__ == '__main__':
 
     # find mp3 files on usb stick
+
+    p = Process(target=play_sound, args=('',))
+    p.start()
       
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
@@ -33,6 +34,7 @@ if __name__ == '__main__':
             pass
         print('Phone was picked Up!')
 
+        p.kill()
         p = Process(target=play_sound, args=('/mnt/usb/welcome.mp3',))
         p.start()
 
@@ -48,6 +50,8 @@ if __name__ == '__main__':
                 sleep(1)
             if readkeypad.check_phone_picked_up():
                 p.kill()
+                p = Process(target=play_sound, args=('',))
+                p.start()
                 break
 
 
