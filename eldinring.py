@@ -12,6 +12,10 @@ def play_sound(mp3_file):
         print(e)
 
 if __name__ == '__main__':
+
+    # find mp3 files on usb stick
+      
+
     Play.init_sound()
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
@@ -23,7 +27,7 @@ if __name__ == '__main__':
         while(not readkeypad.check_phone_picked_up()):
             pass
 
-        p = Process(target=play_sound, args=("welcome.mp3"))
+        p = Process(target=play_sound, args=("~/../../mnt/usb/welcome.mp3"))
         p.start()
 
         # start looking at keypad
@@ -33,7 +37,7 @@ if __name__ == '__main__':
                 print(f'{pressed_button} was pressed!')
                 p.kill()
                 sleep(0.25)
-                p = Process(target=play_sound, args=(pressed_button+'.mp3'))
+                p = Process(target=play_sound, args=('~/../../mnt/usb/' + pressed_button+'.mp3'))
                 p.start()
                 sleep(1)
             if not readkeypad.check_phone_picked_up():
