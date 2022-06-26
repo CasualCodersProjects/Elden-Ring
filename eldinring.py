@@ -4,6 +4,7 @@ from multiprocessing import Process
 import readkeypad
 
 def play_sound(mp3_file):
+    Play.init_sound()
     try:
         Play.play_music(mp3_file)
         sleep(.25)
@@ -15,8 +16,6 @@ if __name__ == '__main__':
 
     # find mp3 files on usb stick
       
-
-    Play.init_sound()
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
 
@@ -24,7 +23,7 @@ if __name__ == '__main__':
         print('Program start! Welcome to the phone booth!')
 
         # Wait until handset is unplugged
-        while(not readkeypad.check_phone_picked_up()):
+        while(readkeypad.check_phone_picked_up()):
             pass
         print('Phone was picked Up!')
 
@@ -41,7 +40,7 @@ if __name__ == '__main__':
                 p = Process(target=play_sound, args=('~/../../mnt/usb/' + pressed_button+'.mp3'))
                 p.start()
                 sleep(1)
-            if not readkeypad.check_phone_picked_up():
+            if readkeypad.check_phone_picked_up():
                 p.kill()
                 break
 
