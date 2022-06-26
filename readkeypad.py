@@ -66,5 +66,5 @@ def phone_setup():
 
 # returns true if phone is picked up
 def check_phone_picked_up():
-    print(f'phone pins are {GPIO.input(phone_pins[0])} and {GPIO.input(phone_pins[3])}')
+    # print(f'phone pins are {GPIO.input(phone_pins[0])} and {GPIO.input(phone_pins[3])}')
     return GPIO.input(phone_pins[0]) or GPIO.input(phone_pins[3])
