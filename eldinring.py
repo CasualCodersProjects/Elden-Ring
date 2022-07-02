@@ -70,15 +70,27 @@ if __name__ == '__main__':
 
         intro_soundplayer.start_playing('/mnt/usb/welcome.mp3')
 
+        intro_has_been_stopped = False
+        song_has_started_playing = False
         # start looking at keypad
         while True:
             pressed_button = readkeypad.check_keypad_pressed()
             if pressed_button is not None:
                 print(f'{pressed_button} was pressed!')
-                intro_soundplayer.stop_playing()
+                if not intro_has_been_stopped:
+                    intro_soundplayer.stop_playing()
+                    intro_has_been_stopped = True
                 song_soundplayer.start_playing(f'/mnt/usb/{pressed_button}.mp3')
-            if readkeypad.check_phone_picked_up():
-                song_soundplayer.stop_playing()
-
+                song_has_started_playing = True
                 break
+            if readkeypad.check_phone_picked_up():
+                if not intro_has_been_stopped:
+                    intro_soundplayer.stop_playing()
+                    intro_has_been_stopped = True
+                break
+        # Do nothing until someone hangs up the phone
+        while readkeypad.check_phone_picked_up():
+            pass
+        if song_has_started_playing:
+            song_soundplayer.stop_playing()
 
