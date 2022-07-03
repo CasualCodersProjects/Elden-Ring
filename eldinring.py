@@ -15,7 +15,7 @@ class soundplayer:
         self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
         self.sound_process.start()
         self.backup_sound_queue = multiprocessing.Queue()
-        self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+        self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,))
         self.backup_sound_process.start()
         
     def start_playing(self, mp3_file):
@@ -35,11 +35,12 @@ class soundplayer:
             self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
             self.sound_process.start()
             self.using_backup = True
+            print('now using backup process')
         else:
             self.backup_sound_process.kill()
             while not self.backup_sound_queue.empty():
                 self.backup_sound_queue.get()
-            self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+            self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,))
             self.backup_sound_process.start()
             self.using_backup = False
 
