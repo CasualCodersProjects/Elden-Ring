@@ -9,6 +9,7 @@ import os
 class soundplayer:
 
     def __init__(self,play_outro):
+        self.using_backup = False
         self.play_outro = play_outro
         self.sound_queue = multiprocessing.Queue()
         self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
@@ -19,16 +20,29 @@ class soundplayer:
         
     def start_playing(self, mp3_file):
         print('starting play')
-        self.sound_queue.put(mp3_file)
+        if not self.using_backup:
+            self.sound_queue.put(mp3_file)
+        else:
+            self.backup_sound_queue.put(mp3_file)
 
     def stop_playing(self):
         print('stopping play')
-        self.sound_process.kill()
-        self.sound_process = self.backup_sound_process
-        self.sound_queue = self.backup_sound_queue
-        self.backup_sound_queue = multiprocessing.Queue()
-        self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
-        self.backup_sound_process.start()
+
+        if not self.using_backup:
+            self.sound_process.kill()
+            while not self.sound_queue.empty():
+                self.sound_queue.get()
+            self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+            self.sound_process.start()
+            self.using_backup = True
+        else:
+            self.backup_sound_process.kill()
+            while not self.backup_sound_queue.empty():
+                self.backup_sound_queue.get()
+            self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+            self.backup_sound_process.start()
+            self.using_backup = False
+
 
 
 
