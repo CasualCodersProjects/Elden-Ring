@@ -18,9 +18,11 @@ class soundplayer:
         self.backup_sound_process.start()
         
     def start_playing(self, mp3_file):
+        print('starting play')
         self.sound_queue.put(mp3_file)
 
     def stop_playing(self):
+        print('stopping play')
         self.sound_process.kill()
         self.sound_process = self.backup_sound_process
         self.sound_queue = self.backup_sound_queue
@@ -59,9 +61,10 @@ if __name__ == '__main__':
 
     intro_soundplayer = soundplayer(play_outro=False)
     song_soundplayer = soundplayer(play_outro=True)
+    print('Program start! Welcome to the phone booth!')
     
     while True:
-        print('Program start! Welcome to the phone booth!')
+        print('Device hung up. Waiting for pickup...')
 
         # Wait until handset is unplugged
         while(readkeypad.check_phone_hung_up()):
