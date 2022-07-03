@@ -11,7 +11,8 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-phone_pins = [5,6,12,13]
+ringer_pins = [13] 
+phone_pins = [5,6]
 keypad_pins = [4,17,27,22,23,24,25]
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -67,4 +68,14 @@ def phone_setup():
 # returns true if phone is picked up
 def check_phone_hung_up():
     # print(f'phone pins are {GPIO.input(phone_pins[0])} and {GPIO.input(phone_pins[3])}')
-    return GPIO.input(phone_pins[0]) or GPIO.input(phone_pins[3])
+    return GPIO.input(phone_pins[0]) or GPIO.input(phone_pins[1])
+
+def ringer_setup():
+    GPIO.setup(ringer_pins[0], GPIO.OUT, initial=GPIO.LOW)
+
+def ring():
+    for i in range(25):
+        GPIO.output(ringer_pins[0], GPIO.HIGH)
+        sleep(1)
+        GPIO.output(ringer_pins[0], GPIO.LOW)
+        sleep(1)
