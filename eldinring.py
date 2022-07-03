@@ -8,14 +8,15 @@ import os
 
 class soundplayer:
 
-    def __init__(self,play_outro):
+    def __init__(self,play_outro,repeat):
         self.using_backup = False
+        self.repeat = repeat
         self.play_outro = play_outro
         self.sound_queue = multiprocessing.Queue()
-        self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+        self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,self.repeat,))
         self.sound_process.start()
         self.backup_sound_queue = multiprocessing.Queue()
-        self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,))
+        self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,self.repeat,))
         self.backup_sound_process.start()
         
     def start_playing(self, mp3_file):
@@ -32,7 +33,7 @@ class soundplayer:
             self.sound_process.kill()
             while not self.sound_queue.empty():
                 self.sound_queue.get()
-            self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,))
+            self.sound_process = Process(target=play_sound_with_queue, args=(self.sound_queue,self.play_outro,self.repeat,))
             self.sound_process.start()
             self.using_backup = True
             print('now using backup process')
@@ -40,14 +41,14 @@ class soundplayer:
             self.backup_sound_process.kill()
             while not self.backup_sound_queue.empty():
                 self.backup_sound_queue.get()
-            self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,))
+            self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,self.repeat,))
             self.backup_sound_process.start()
             self.using_backup = False
 
 
 
 
-def play_sound_with_queue(queue,play_outro):
+def play_sound_with_queue(queue,play_outro,repeat):
     Play.init_sound()
 
     # wait for queue to play
@@ -57,7 +58,11 @@ def play_sound_with_queue(queue,play_outro):
 
     if os.path.exists(mp3_file):
         try:
-            Play.play_music(mp3_file)
+            if not repeat:
+                Play.play_music(mp3_file)
+            else:
+                while True:
+                    Play.play_music(mp3_file)
             sleep(.25)
             if play_outro:
                 Play.play_music('/mnt/usb/outro.mp3')
@@ -74,8 +79,8 @@ if __name__ == '__main__':
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
 
-    intro_soundplayer = soundplayer(play_outro=False)
-    song_soundplayer = soundplayer(play_outro=True)
+    intro_soundplayer = soundplayer(play_outro=False,repeat=True)
+    song_soundplayer = soundplayer(play_outro=True,repeat=False)
     print('Program start! Welcome to the phone booth!')
     
     while True:
