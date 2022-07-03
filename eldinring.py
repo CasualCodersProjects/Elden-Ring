@@ -64,7 +64,7 @@ if __name__ == '__main__':
         print('Program start! Welcome to the phone booth!')
 
         # Wait until handset is unplugged
-        while(readkeypad.check_phone_picked_up()):
+        while(readkeypad.check_phone_hung_up()):
             pass
         print('Phone was picked Up!')
 
@@ -83,13 +83,13 @@ if __name__ == '__main__':
                 song_soundplayer.start_playing(f'/mnt/usb/{pressed_button}.mp3')
                 song_has_started_playing = True
                 break
-            if readkeypad.check_phone_picked_up():
+            if readkeypad.check_phone_hung_up():
                 if not intro_has_been_stopped:
                     intro_soundplayer.stop_playing()
                     intro_has_been_stopped = True
                 break
         # Do nothing until someone hangs up the phone
-        while readkeypad.check_phone_picked_up():
+        while not readkeypad.check_phone_hung_up():
             pass
         if song_has_started_playing:
             song_soundplayer.stop_playing()
