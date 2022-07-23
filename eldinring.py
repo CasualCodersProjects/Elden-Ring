@@ -5,6 +5,7 @@ from time import sleep
 from multiprocessing import Process
 import readkeypad
 import os
+import requests
 
 class soundplayer:
 
@@ -18,7 +19,7 @@ class soundplayer:
         self.backup_sound_queue = multiprocessing.Queue()
         self.backup_sound_process = Process(target=play_sound_with_queue, args=(self.backup_sound_queue,self.play_outro,self.repeat,))
         self.backup_sound_process.start()
-        
+
     def start_playing(self, mp3_file):
         print('starting play')
         if not self.using_backup:
@@ -75,14 +76,16 @@ def play_sound_with_queue(queue,play_outro,repeat):
 
 if __name__ == '__main__':
     # find mp3 files on usb stick
-      
+
     readkeypad.phone_setup()
     readkeypad.gpio_setup()
 
     intro_soundplayer = soundplayer(play_outro=False,repeat=True)
     song_soundplayer = soundplayer(play_outro=True,repeat=False)
+    sleep(10)
+    requests.get('http://192.168.4.1:8000/ring25') #ring bell to signify ready
     print('Program start! Welcome to the phone booth!')
-    
+
     while True:
         print('Device hung up. Waiting for pickup...')
 
@@ -90,9 +93,10 @@ if __name__ == '__main__':
         while(readkeypad.check_phone_hung_up()):
             pass
         print('Phone was picked Up!')
+        requests.get('http://192.168.4.1:8000/stop')
 
         intro_soundplayer.start_playing('/mnt/usb/welcome.mp3')
-
+        sleep(0.1)
         intro_has_been_stopped = False
         song_has_started_playing = False
         # start looking at keypad

@@ -1,4 +1,4 @@
 #!/bin/bash
-source /home/pi/music/Elden-Ring/venv/bin/activate
+#source /home/pi/Elden-Ring/venv/bin/activate
 which python
-python /home/pi/music/Elden-Ring/eldinring.py
+/home/pi/Elden-Ring/venv/bin/python /home/pi/Elden-Ring/eldinring.py
